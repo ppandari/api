@@ -1,0 +1,300 @@
+{
+	"info": {
+		"_postman_id": "7278495c-3f68-4c28-bfc0-2da75333b8b5",
+		"name": "API Test Rec75 class and imo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Token",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.globals.set(\"imonum\", \"18257905\");",
+							"pm.globals.set(\"base_url\",\"api-test.eagle.org\");",
+							"pm.globals.set(\"subscript_key\",\"SUBSCRIPTION KEY HERE\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Set Access Token\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json();",
+							"    console.log(jsonData.access_token);",
+							"    //set access_token",
+							"    pm.globals.set(\"access_token\", jsonData.access_token);",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "<USERNAME>",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "<PASSWORD>",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "<CLIENTID>",
+							"type": "text"
+						},
+						{
+							"key": "response_type",
+							"value": "token",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "openid <CLIENTID>",
+							"type": "text"
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "https://absauth.b2clogin.com/ABSAuth.onmicrosoft.com/B2C_1A_signup_signin_ROPC/oauth2/v2.0/token",
+					"protocol": "https",
+					"host": [
+						"absauth",
+						"b2clogin",
+						"com"
+					],
+					"path": [
+						"ABSAuth.onmicrosoft.com",
+						"B2C_1A_signup_signin_ROPC",
+						"oauth2",
+						"v2.0",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REC75-list-vessels",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{subscript_key}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Ocp-Apim-Trace",
+						"value": "true",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/customer/fleet-status/rec75/v3/vessels",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"fleet-status",
+						"rec75",
+						"v3",
+						"vessels"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REC75-vessel with imoNum",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.globals.set(\"imonum\", \"<IMONUM>\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{subscript_key}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/customer/fleet-status/rec75/v3/vessel/imonum/{{imonum}}",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"fleet-status",
+						"rec75",
+						"v3",
+						"vessel",
+						"imonum",
+						"{{imonum}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REC75-vessel with classNum",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.globals.set(\"classnum\", \"<CLASSNUM>\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{subscript_key}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/customer/fleet-status/rec75/v3/vessel/classnum/{{classnum}}",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"fleet-status",
+						"rec75",
+						"v3",
+						"vessel",
+						"classnum",
+						"{{classnum}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	}
+}
