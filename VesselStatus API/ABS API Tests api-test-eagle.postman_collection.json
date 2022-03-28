@@ -1,0 +1,1370 @@
+{
+	"info": {
+		"_postman_id": "393aed56-05b1-47d5-a4bd-112ea3ff742b",
+		"name": "ABS API Tests api-test-eagle",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Token",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.globals.set(\"classnum\", \"<classnum>\");",
+							"pm.globals.set(\"base_url\",\"api-test.eagle.org\");",
+							"pm.globals.set(\"subscript_key\",\"<subscription_key>\");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Set Access Token\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json();",
+							"    console.log(jsonData.access_token);",
+							"    //set access_token",
+							"    pm.globals.set(\"access_token\", jsonData.access_token);",
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "<username>",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "<password>",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "<clientid>",
+							"type": "text"
+						},
+						{
+							"key": "response_type",
+							"value": "token",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "openid <clientid>",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://absauth.b2clogin.com/ABSAuth.onmicrosoft.com/B2C_1A_signup_signin_ROPC/oauth2/v2.0/token",
+					"protocol": "https",
+					"host": [
+						"absauth",
+						"b2clogin",
+						"com"
+					],
+					"path": [
+						"ABSAuth.onmicrosoft.com",
+						"B2C_1A_signup_signin_ROPC",
+						"oauth2",
+						"v2.0",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "vessel",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.globals.set(\"classnum\", \"<classnum>\");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"        console.log(pm.globals.get(\"apischema\"))",
+							"",
+							"});",
+							"const Link = {",
+							"                \"type\": \"object\",",
+							"                \"properties\": {",
+							"                    \"rel\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"href\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"action\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"types\": {",
+							"                        \"type\": \"array\",",
+							"                        \"items\": {",
+							"                            \"type\": \"string\"",
+							"                        }",
+							"                    }",
+							"                }",
+							"};",
+							"",
+							"const NumericMeasure = {",
+							"                \"type\": \"object\",",
+							"                \"properties\": {",
+							"                    \"value\": {",
+							"                        \"type\": \"number\"",
+							"                    },",
+							"                    \"unit\": {",
+							"                        \"type\": \"string\"",
+							"                    }",
+							"                }",
+							"            }",
+							"",
+							"const Owner = {",
+							"                \"type\": \"object\",",
+							"                \"properties\": {",
+							"                    \"type\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"name\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"address\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"wcn\": {",
+							"                        \"type\": \"string\"",
+							"                    }",
+							"                }",
+							"            }",
+							"",
+							"const builderDesignationSchema = {",
+							" \"type\": \"object\",",
+							"                \"properties\": {",
+							"                    \"shipyard\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"hullNumber\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"contractDate\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"The date a contract is signed between the primary builder and the owner for the construction of a vessel or offshore facility.\\n\"",
+							"                    }",
+							"                }",
+							"}",
+							"const ServiceState = {",
+							"                \"type\": \"object\",",
+							"                \"properties\": {",
+							"                    \"serviceType\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"serviceState\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"stateDate\": {",
+							"                        \"type\": \"string\"",
+							"                    }",
+							"                }",
+							"            }",
+							"",
+							"const vesselSchema = {",
+							"",
+							"                \"type\": \"object\",",
+							"                \"properties\": {",
+							"                    \"classNumber\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"The classification society's specific identification number assigned to a vessel.\\n\"",
+							"                    },",
+							"                    \"imoNumber\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"The International Maritime Organization number is a unique identifier for ships, registered ship owners and management companies.\\n\"",
+							"                    },",
+							"                    \"vesselName\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"The name of the vessel.\\n\"",
+							"                    },",
+							"                    \"description\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"A description on the Classification Certificate that provides a more definitive identification of the industrial function of a vessel that supplements the Class Notation or provides a further clarification in the case where the Class Notation is nondescript.\\n\"",
+							"                    },",
+							"                    \"vesselType\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"The principal categorization of a vessel/unit by its structural arrangement.\\n\"",
+							"                    },",
+							"                    \"callSign\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"The unique lifecycle identifier assigned to the ship by the flag state for radio communication.\\n\"",
+							"                    },",
+							"                    \"officialNumber\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"The Official Number is a ship identifier number assigned to merchant ship by her country of registration.\\n\"",
+							"                    },",
+							"                    \"portRegistry\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"The place where the details of a ship or boat are officially recorded.\\n\"",
+							"                    },",
+							"                    \"primaryBuilder\": builderDesignationSchema,",
+							"                    \"registeredOwner\": Owner,",
+							"                    \"flagName\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"The national authority with whom the vessel is registered.\\n\"",
+							"                    },",
+							"                    \"classNotation\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"A combination of words, acronyms, letters or abbreviations that describe a vessel's design parameters and restrictions, cargo type, service or applicable survey characteristics, for example, Oil Carrier, ACCU, Gulf of Mexico, SH HM2, CPP, etc.\\n\"",
+							"                    },",
+							"                    \"lifeCycleStatus\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"The LifeCycle state of the vessel.\\n\"",
+							"                    },",
+							"                    \"businessStatus\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"The business state of the vessel.\\n\"",
+							"                    },",
+							"                    \"serviceStates\": {",
+							"                        \"type\": \"array\",",
+							"                        \"items\": ServiceState,",
+							"                        \"description\": \"Vessel's classification and statutory service state.\\n\"",
+							"                    },",
+							"                    \"otherClassSociety\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"TheOther Class Socirty nmae for dual class vessel.\\n\"",
+							"                    },",
+							"                    \"deliveryDate\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"The Delivery Date means the date upon which a vessel is delivered by the Builder.\\n\"",
+							"                    },",
+							"                    \"keelLayingDate\": {",
+							"                        \"type\": \"string\",",
+							"                        \"description\": \"The date upon which progressive construction identifiable with a specific vessel begins, including construction of the first module or prefabricated section of the hull that is identifiable with that vessel.\\n\"",
+							"                    },",
+							"                    \"grossTonnage\": NumericMeasure,",
+							"                    \"netTonnage\": NumericMeasure,",
+							"                    \"designDeadWeight\":NumericMeasure,",
+							"                    \"lengthOverall\": NumericMeasure,",
+							"                    \"breadthMolded\": NumericMeasure,",
+							"                    \"depthMolded\": NumericMeasure,",
+							"                    \"links\": {",
+							"                        \"type\": \"array\",",
+							"                        \"items\": Link",
+							"                    }",
+							"                }",
+							"}",
+							"",
+							"pm.test('Schema is valid', function () {",
+							"    pm.response.to.have.jsonSchema(vesselSchema);",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{subscript_key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/customer/fleet-status/v1/vessel/{{classnum}}",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"fleet-status",
+						"v1",
+						"vessel",
+						"{{classnum}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "vessels",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{subscript_key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/customer/fleet-status/v1/vessels",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"fleet-status",
+						"v1",
+						"vessels"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "certificates",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var schema = {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"certificates\": {",
+							"            \"type\": \"array\",",
+							"            \"items\": {",
+							"                \"type\": \"object\",",
+							"                \"properties\": {",
+							"                    \"serviceType\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"id\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"name\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"abbr\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"term\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"flagName\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"deadweight\": {",
+							"                        \"type\": \"integer\"",
+							"                    },",
+							"                    \"issueDate\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"expiryDate\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"extensionDate\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"placeOfIssue\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"issuedBy\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"personName\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"status\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"statusDate\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"link\": {",
+							"                        \"type\": \"object\",",
+							"                        \"properties\": {",
+							"                            \"rel\": {",
+							"                                \"type\": \"string\"",
+							"                            },",
+							"                            \"href\": {",
+							"                                \"type\": \"string\"",
+							"                            },",
+							"                            \"action\": {",
+							"                                \"type\": \"string\"",
+							"                            },",
+							"                            \"types\": {",
+							"                                \"type\": \"array\",",
+							"                                \"items\": {",
+							"                                    \"type\": \"string\"",
+							"                                }",
+							"                            }",
+							"                        }",
+							"                    }",
+							"                }",
+							"            }",
+							"        }",
+							"    }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function () {",
+							"    pm.response.to.have.jsonSchema(schema);",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{subscript_key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/customer/fleet-status/v1/vessel/{{classnum}}/certificates",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"fleet-status",
+						"v1",
+						"vessel",
+						"{{classnum}}",
+						"certificates"
+					],
+					"query": [
+						{
+							"key": "Authorization",
+							"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im1sOEVtM0JUYjhFQWdrcnRXSmFQc1ZoNTdjXzhUVG9LU1hSM1hQbHJPOXMifQ.eyJpc3MiOiJodHRwczovL2Fic2F1dGguYjJjbG9naW4uY29tL2UwYTgzNjZlLTUwMzUtNDA3ZS04NmYyLWY2NDkyYzliODM0Ny92Mi4wLyIsImV4cCI6MTYwNTg4Mzc3MSwibmJmIjoxNjA1ODgwMTcxLCJhdWQiOiJjNDZjYmU4MS0zZWExLTRkMTktOWIxMy1mMTFkODcxNDZjYTQiLCJzdWIiOiJlNDA3ZTE0OC0wYjI4LTQyNTctYjkzYS1iZDgyYzIzY2M1ZTMiLCJuYW1lIjoiTmF2ZWVuIFNyaXZhc3RhdmEiLCJnaXZlbl9uYW1lIjoiTmF2ZWVuIiwiZmFtaWx5X25hbWUiOiJTcml2YXN0YXZhIiwic2lnbkluTmFtZSI6ImU0MDdlMTQ4LTBiMjgtNDI1Ny1iOTNhLWJkODJjMjNjYzVlM0BBQlNBdXRoLm9ubWljcm9zb2Z0LmNvbSIsImNpdHkiOiJIT1VTVE9OIiwiY291bnRyeSI6IlVTIiwic2lnbkluTmFtZXMudXNlck5hbWUiOiJic29vbiIsInVzZXJOYW1lIjoiYnNvb24iLCJ0aWQiOiJlMGE4MzY2ZS01MDM1LTQwN2UtODZmMi1mNjQ5MmM5YjgzNDciLCJhenAiOiJjNDZjYmU4MS0zZWExLTRkMTktOWIxMy1mMTFkODcxNDZjYTQiLCJ2ZXIiOiIxLjAiLCJpYXQiOjE2MDU4ODAxNzF9.CwU-wQGFRGB7MI9xWFkdewW8Sx4zCsummPhGSv_zQhzv0BTW7kOzidyZsYrBrvFey0iH-fxyekyrKO0bxFQn2HY6783jlclh8n3bTOZMEdzmhdvxCHynBI73YuVl1T8jljctb-vnos52TvTEFPD8Upn-apwVbA6oKELluKNevQhVYNUgQbl5yIeHrokhljj6WuL2eRz5BOVGC15rqkyY7YxwPf8ktTbc37Qt34wJ7WgThj83ARzoDbQ2UGrDO-c8CwiYR4z0guNHVd_PYiaPRAH5OcDzXWM8SWguY5ISN-bEf1KCnTosxpXr65793k6nf9U0u5W9McYw2qxxSdvxtA",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "findings",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var schema = {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"findings\": {",
+							"            \"type\": \"array\",",
+							"            \"items\": {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"uid\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"serviceType\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"category\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"status\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"dueIndicator\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"assetUid\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"assetDescription\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"criticality\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"reportNumber\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"associatedTask\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"findingType\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"dateCreated\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"dueDate\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"dueByTask\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"description\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"history\": {",
+							"            \"type\": \"array\",",
+							"            \"items\": {",
+							"                    \"required\": [",
+							"                        \"uid\",",
+							"                        \"dateCreated\",",
+							"                        \"reportNumber\",",
+							"                        \"reportLocation\",",
+							"                        \"criticality\",",
+							"                        \"findingType\",",
+							"                        \"description\"",
+							"                    ],",
+							"                    \"type\": \"object\",",
+							"                    \"properties\": {",
+							"                        \"uid\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"dateCreated\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"reportNumber\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"reportLocation\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"criticality\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"findingType\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"description\": {",
+							"                            \"type\": \"string\"",
+							"                        }",
+							"                        }",
+							"                        }",
+							"                    }",
+							"                }",
+							"            }",
+							"        }",
+							"    }",
+							"};",
+							"",
+							"// var data1 = [true, false];",
+							"// var data2 = [true, 123];",
+							"",
+							"pm.test('Schema is valid', function () {",
+							"    // var jsonData = pm.response.json();",
+							"    pm.response.to.have.jsonSchema(schema);",
+							"    // pm.expect(tv4.validate(pm.response, schema)).to.be.true;",
+							"   // pm.expect(tv4.validate(data2, schema)).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{subscript_key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/customer/fleet-status/v1/vessel/{{classnum}}/findings",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"fleet-status",
+						"v1",
+						"vessel",
+						"{{classnum}}",
+						"findings"
+					],
+					"query": [
+						{
+							"key": "Authorization",
+							"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im1sOEVtM0JUYjhFQWdrcnRXSmFQc1ZoNTdjXzhUVG9LU1hSM1hQbHJPOXMifQ.eyJpc3MiOiJodHRwczovL2Fic2F1dGguYjJjbG9naW4uY29tL2UwYTgzNjZlLTUwMzUtNDA3ZS04NmYyLWY2NDkyYzliODM0Ny92Mi4wLyIsImV4cCI6MTYwNTg4Mzc3MSwibmJmIjoxNjA1ODgwMTcxLCJhdWQiOiJjNDZjYmU4MS0zZWExLTRkMTktOWIxMy1mMTFkODcxNDZjYTQiLCJzdWIiOiJlNDA3ZTE0OC0wYjI4LTQyNTctYjkzYS1iZDgyYzIzY2M1ZTMiLCJuYW1lIjoiTmF2ZWVuIFNyaXZhc3RhdmEiLCJnaXZlbl9uYW1lIjoiTmF2ZWVuIiwiZmFtaWx5X25hbWUiOiJTcml2YXN0YXZhIiwic2lnbkluTmFtZSI6ImU0MDdlMTQ4LTBiMjgtNDI1Ny1iOTNhLWJkODJjMjNjYzVlM0BBQlNBdXRoLm9ubWljcm9zb2Z0LmNvbSIsImNpdHkiOiJIT1VTVE9OIiwiY291bnRyeSI6IlVTIiwic2lnbkluTmFtZXMudXNlck5hbWUiOiJic29vbiIsInVzZXJOYW1lIjoiYnNvb24iLCJ0aWQiOiJlMGE4MzY2ZS01MDM1LTQwN2UtODZmMi1mNjQ5MmM5YjgzNDciLCJhenAiOiJjNDZjYmU4MS0zZWExLTRkMTktOWIxMy1mMTFkODcxNDZjYTQiLCJ2ZXIiOiIxLjAiLCJpYXQiOjE2MDU4ODAxNzF9.CwU-wQGFRGB7MI9xWFkdewW8Sx4zCsummPhGSv_zQhzv0BTW7kOzidyZsYrBrvFey0iH-fxyekyrKO0bxFQn2HY6783jlclh8n3bTOZMEdzmhdvxCHynBI73YuVl1T8jljctb-vnos52TvTEFPD8Upn-apwVbA6oKELluKNevQhVYNUgQbl5yIeHrokhljj6WuL2eRz5BOVGC15rqkyY7YxwPf8ktTbc37Qt34wJ7WgThj83ARzoDbQ2UGrDO-c8CwiYR4z0guNHVd_PYiaPRAH5OcDzXWM8SWguY5ISN-bEf1KCnTosxpXr65793k6nf9U0u5W9McYw2qxxSdvxtA",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "engineeringcomments",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var schema = {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"findings\": {",
+							"            \"type\": \"array\",",
+							"            \"items\": {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"uid\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"serviceType\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"category\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"status\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"dueIndicator\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"assetUid\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"assetDescription\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"criticality\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"reportNumber\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"associatedTask\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"findingType\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"dateCreated\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"dueDate\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"dueByTask\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"description\": {",
+							"            \"type\": \"string\"",
+							"        },",
+							"        \"history\": {",
+							"            \"type\": \"array\",",
+							"            \"items\": {",
+							"                    \"required\": [",
+							"                        \"uid\",",
+							"                        \"dateCreated\",",
+							"                        \"reportNumber\",",
+							"                        \"reportLocation\",",
+							"                        \"criticality\",",
+							"                        \"findingType\",",
+							"                        \"description\"",
+							"                    ],",
+							"                    \"type\": \"object\",",
+							"                    \"properties\": {",
+							"                        \"uid\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"dateCreated\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"reportNumber\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"reportLocation\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"criticality\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"findingType\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"description\": {",
+							"                            \"type\": \"string\"",
+							"                        }",
+							"                        }",
+							"                        }",
+							"                    }",
+							"                }",
+							"            }",
+							"        }",
+							"    }",
+							"};",
+							"",
+							"// var data1 = [true, false];",
+							"// var data2 = [true, 123];",
+							"",
+							"pm.test('Schema is valid', function () {",
+							"    // var jsonData = pm.response.json();",
+							"    pm.response.to.have.jsonSchema(schema);",
+							"    // pm.expect(tv4.validate(pm.response, schema)).to.be.true;",
+							"   // pm.expect(tv4.validate(data2, schema)).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{subscript_key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/customer/fleet-status/v1/vessel/{{classnum}}/findings",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"fleet-status",
+						"v1",
+						"vessel",
+						"{{classnum}}",
+						"findings"
+					],
+					"query": [
+						{
+							"key": "Authorization",
+							"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im1sOEVtM0JUYjhFQWdrcnRXSmFQc1ZoNTdjXzhUVG9LU1hSM1hQbHJPOXMifQ.eyJpc3MiOiJodHRwczovL2Fic2F1dGguYjJjbG9naW4uY29tL2UwYTgzNjZlLTUwMzUtNDA3ZS04NmYyLWY2NDkyYzliODM0Ny92Mi4wLyIsImV4cCI6MTYwNTg4Mzc3MSwibmJmIjoxNjA1ODgwMTcxLCJhdWQiOiJjNDZjYmU4MS0zZWExLTRkMTktOWIxMy1mMTFkODcxNDZjYTQiLCJzdWIiOiJlNDA3ZTE0OC0wYjI4LTQyNTctYjkzYS1iZDgyYzIzY2M1ZTMiLCJuYW1lIjoiTmF2ZWVuIFNyaXZhc3RhdmEiLCJnaXZlbl9uYW1lIjoiTmF2ZWVuIiwiZmFtaWx5X25hbWUiOiJTcml2YXN0YXZhIiwic2lnbkluTmFtZSI6ImU0MDdlMTQ4LTBiMjgtNDI1Ny1iOTNhLWJkODJjMjNjYzVlM0BBQlNBdXRoLm9ubWljcm9zb2Z0LmNvbSIsImNpdHkiOiJIT1VTVE9OIiwiY291bnRyeSI6IlVTIiwic2lnbkluTmFtZXMudXNlck5hbWUiOiJic29vbiIsInVzZXJOYW1lIjoiYnNvb24iLCJ0aWQiOiJlMGE4MzY2ZS01MDM1LTQwN2UtODZmMi1mNjQ5MmM5YjgzNDciLCJhenAiOiJjNDZjYmU4MS0zZWExLTRkMTktOWIxMy1mMTFkODcxNDZjYTQiLCJ2ZXIiOiIxLjAiLCJpYXQiOjE2MDU4ODAxNzF9.CwU-wQGFRGB7MI9xWFkdewW8Sx4zCsummPhGSv_zQhzv0BTW7kOzidyZsYrBrvFey0iH-fxyekyrKO0bxFQn2HY6783jlclh8n3bTOZMEdzmhdvxCHynBI73YuVl1T8jljctb-vnos52TvTEFPD8Upn-apwVbA6oKELluKNevQhVYNUgQbl5yIeHrokhljj6WuL2eRz5BOVGC15rqkyY7YxwPf8ktTbc37Qt34wJ7WgThj83ARzoDbQ2UGrDO-c8CwiYR4z0guNHVd_PYiaPRAH5OcDzXWM8SWguY5ISN-bEf1KCnTosxpXr65793k6nf9U0u5W9McYw2qxxSdvxtA",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "survey-audit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var schema = {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"surveyAudits\": {",
+							"            \"type\": \"array\",",
+							"            \"items\": {",
+							"                    \"type\": \"object\",",
+							"                    \"properties\": {",
+							"                        \"uid\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"type\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"description\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"dueDate\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"rangeFromDate\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"rangeToDate\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"doneDate\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"placeHeld\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"extenedDueDate\": {",
+							"                            \"type\": \"string\"",
+							"                        },",
+							"                        \"status\": {",
+							"                            \"type\": \"string\"",
+							"                        }",
+							"                    }",
+							"                }",
+							"        }",
+							"    }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function () {",
+							"    pm.response.to.have.jsonSchema(schema);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{subscript_key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/customer/fleet-status/v1/vessel/{{classnum}}/survey-audit",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"fleet-status",
+						"v1",
+						"vessel",
+						"{{classnum}}",
+						"survey-audit"
+					],
+					"query": [
+						{
+							"key": "Authorization",
+							"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im1sOEVtM0JUYjhFQWdrcnRXSmFQc1ZoNTdjXzhUVG9LU1hSM1hQbHJPOXMifQ.eyJpc3MiOiJodHRwczovL2Fic2F1dGguYjJjbG9naW4uY29tL2UwYTgzNjZlLTUwMzUtNDA3ZS04NmYyLWY2NDkyYzliODM0Ny92Mi4wLyIsImV4cCI6MTYwNTg4Mzc3MSwibmJmIjoxNjA1ODgwMTcxLCJhdWQiOiJjNDZjYmU4MS0zZWExLTRkMTktOWIxMy1mMTFkODcxNDZjYTQiLCJzdWIiOiJlNDA3ZTE0OC0wYjI4LTQyNTctYjkzYS1iZDgyYzIzY2M1ZTMiLCJuYW1lIjoiTmF2ZWVuIFNyaXZhc3RhdmEiLCJnaXZlbl9uYW1lIjoiTmF2ZWVuIiwiZmFtaWx5X25hbWUiOiJTcml2YXN0YXZhIiwic2lnbkluTmFtZSI6ImU0MDdlMTQ4LTBiMjgtNDI1Ny1iOTNhLWJkODJjMjNjYzVlM0BBQlNBdXRoLm9ubWljcm9zb2Z0LmNvbSIsImNpdHkiOiJIT1VTVE9OIiwiY291bnRyeSI6IlVTIiwic2lnbkluTmFtZXMudXNlck5hbWUiOiJic29vbiIsInVzZXJOYW1lIjoiYnNvb24iLCJ0aWQiOiJlMGE4MzY2ZS01MDM1LTQwN2UtODZmMi1mNjQ5MmM5YjgzNDciLCJhenAiOiJjNDZjYmU4MS0zZWExLTRkMTktOWIxMy1mMTFkODcxNDZjYTQiLCJ2ZXIiOiIxLjAiLCJpYXQiOjE2MDU4ODAxNzF9.CwU-wQGFRGB7MI9xWFkdewW8Sx4zCsummPhGSv_zQhzv0BTW7kOzidyZsYrBrvFey0iH-fxyekyrKO0bxFQn2HY6783jlclh8n3bTOZMEdzmhdvxCHynBI73YuVl1T8jljctb-vnos52TvTEFPD8Upn-apwVbA6oKELluKNevQhVYNUgQbl5yIeHrokhljj6WuL2eRz5BOVGC15rqkyY7YxwPf8ktTbc37Qt34wJ7WgThj83ARzoDbQ2UGrDO-c8CwiYR4z0guNHVd_PYiaPRAH5OcDzXWM8SWguY5ISN-bEf1KCnTosxpXr65793k6nf9U0u5W9McYw2qxxSdvxtA",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "parts-status",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.globals.set(\"classnum\", \"<classnum>\");\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var schema = {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"partsStatus\": {",
+							"            \"type\": \"array\",",
+							"            \"items\": {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"                    \"uid\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"parentUid\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"surveyName\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"surveyDueDate\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"assetType\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"assetName\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"inspectionType\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"absProgram\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"status\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"dueDate\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"doneDate\": {",
+							"                        \"type\": \"string\"",
+							"                    },",
+							"                    \"extenedDueDate\": {",
+							"                        \"type\": \"string\"",
+							"                    }",
+							"                }",
+							"            }",
+							"        }",
+							"    }",
+							"};",
+							"",
+							"pm.test('Schema is valid', function () {",
+							"    pm.response.to.have.jsonSchema(schema);",
+							"})",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{subscript_key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/customer/fleet-status/v1/vessel/{{classnum}}/parts/status",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"fleet-status",
+						"v1",
+						"vessel",
+						"{{classnum}}",
+						"parts",
+						"status"
+					],
+					"query": [
+						{
+							"key": "Authorization",
+							"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im1sOEVtM0JUYjhFQWdrcnRXSmFQc1ZoNTdjXzhUVG9LU1hSM1hQbHJPOXMifQ.eyJpc3MiOiJodHRwczovL2Fic2F1dGguYjJjbG9naW4uY29tL2UwYTgzNjZlLTUwMzUtNDA3ZS04NmYyLWY2NDkyYzliODM0Ny92Mi4wLyIsImV4cCI6MTYwNTg4Mzc3MSwibmJmIjoxNjA1ODgwMTcxLCJhdWQiOiJjNDZjYmU4MS0zZWExLTRkMTktOWIxMy1mMTFkODcxNDZjYTQiLCJzdWIiOiJlNDA3ZTE0OC0wYjI4LTQyNTctYjkzYS1iZDgyYzIzY2M1ZTMiLCJuYW1lIjoiTmF2ZWVuIFNyaXZhc3RhdmEiLCJnaXZlbl9uYW1lIjoiTmF2ZWVuIiwiZmFtaWx5X25hbWUiOiJTcml2YXN0YXZhIiwic2lnbkluTmFtZSI6ImU0MDdlMTQ4LTBiMjgtNDI1Ny1iOTNhLWJkODJjMjNjYzVlM0BBQlNBdXRoLm9ubWljcm9zb2Z0LmNvbSIsImNpdHkiOiJIT1VTVE9OIiwiY291bnRyeSI6IlVTIiwic2lnbkluTmFtZXMudXNlck5hbWUiOiJic29vbiIsInVzZXJOYW1lIjoiYnNvb24iLCJ0aWQiOiJlMGE4MzY2ZS01MDM1LTQwN2UtODZmMi1mNjQ5MmM5YjgzNDciLCJhenAiOiJjNDZjYmU4MS0zZWExLTRkMTktOWIxMy1mMTFkODcxNDZjYTQiLCJ2ZXIiOiIxLjAiLCJpYXQiOjE2MDU4ODAxNzF9.CwU-wQGFRGB7MI9xWFkdewW8Sx4zCsummPhGSv_zQhzv0BTW7kOzidyZsYrBrvFey0iH-fxyekyrKO0bxFQn2HY6783jlclh8n3bTOZMEdzmhdvxCHynBI73YuVl1T8jljctb-vnos52TvTEFPD8Upn-apwVbA6oKELluKNevQhVYNUgQbl5yIeHrokhljj6WuL2eRz5BOVGC15rqkyY7YxwPf8ktTbc37Qt34wJ7WgThj83ARzoDbQ2UGrDO-c8CwiYR4z0guNHVd_PYiaPRAH5OcDzXWM8SWguY5ISN-bEf1KCnTosxpXr65793k6nf9U0u5W9McYw2qxxSdvxtA",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "downloadAllCerts",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{subscript_key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/customer/fleet-status/v1/vessel/{{classnum}}/certificates/document",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"fleet-status",
+						"v1",
+						"vessel",
+						"{{classnum}}",
+						"certificates",
+						"document"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "downloadSingleCert",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{subscript_key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/customer/fleet-status/v1/vessel/{{classnum}}/report",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"fleet-status",
+						"v1",
+						"vessel",
+						"{{classnum}}",
+						"report"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "download vsr pdf",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{subscript_key}}",
+						"type": "text"
+					},
+					{
+						"key": "Ocp-Apim-trace",
+						"value": "true",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/customer/fleet-status/v1/vessel/{{classnum}}/report",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"fleet-status",
+						"v1",
+						"vessel",
+						"{{classnum}}",
+						"report"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "freeboardAssignment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{subscript_key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/customer/fleet-status/v1/vessel/{{classnum}}/freeboard-tonnage",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"fleet-status",
+						"v1",
+						"vessel",
+						"{{classnum}}",
+						"freeboard-tonnage"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "compartmentCoatingCondition",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Ocp-Apim-Subscription-Key",
+						"value": "{{subscript_key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{base_url}}/customer/fleet-status/v1/vessel/{{classnum}}/compartments",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customer",
+						"fleet-status",
+						"v1",
+						"vessel",
+						"{{classnum}}",
+						"compartments"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im1sOEVtM0JUYjhFQWdrcnRXSmFQc1ZoNTdjXzhUVG9LU1hSM1hQbHJPOXMifQ.eyJpc3MiOiJodHRwczovL2Fic2F1dGguYjJjbG9naW4uY29tL2UwYTgzNjZlLTUwMzUtNDA3ZS04NmYyLWY2NDkyYzliODM0Ny92Mi4wLyIsImV4cCI6MTYwNjUwMjUzNCwibmJmIjoxNjA2NDk4OTM0LCJhdWQiOiJjNDZjYmU4MS0zZWExLTRkMTktOWIxMy1mMTFkODcxNDZjYTQiLCJzdWIiOiJlNDA3ZTE0OC0wYjI4LTQyNTctYjkzYS1iZDgyYzIzY2M1ZTMiLCJuYW1lIjoiTmF2ZWVuIFNyaXZhc3RhdmEiLCJnaXZlbl9uYW1lIjoiTmF2ZWVuIiwiZmFtaWx5X25hbWUiOiJTcml2YXN0YXZhIiwic2lnbkluTmFtZSI6ImU0MDdlMTQ4LTBiMjgtNDI1Ny1iOTNhLWJkODJjMjNjYzVlM0BBQlNBdXRoLm9ubWljcm9zb2Z0LmNvbSIsImNpdHkiOiJIT1VTVE9OIiwiY291bnRyeSI6IlVTIiwic2lnbkluTmFtZXMudXNlck5hbWUiOiJic29vbiIsInVzZXJOYW1lIjoiYnNvb24iLCJ0aWQiOiJlMGE4MzY2ZS01MDM1LTQwN2UtODZmMi1mNjQ5MmM5YjgzNDciLCJhenAiOiJjNDZjYmU4MS0zZWExLTRkMTktOWIxMy1mMTFkODcxNDZjYTQiLCJ2ZXIiOiIxLjAiLCJpYXQiOjE2MDY0OTg5MzR9.VQAg1MCKKIsHPqwn5pC1j5jkCGJYad3IHVZoZroDAFRw6UptIg_BUUXh1_or94eH6EWM3LZIu-XRMrPvF52RcPY9ULuJkf-Gcxqty9E3yyAseJFpFFa7Z9H37RjyvGb_BvLbFEULh2sadLh0i-4F4Tv0_xh70qKib_6XYVpwU3jy0v8VNAzNXXRvd_WaGVTu45Al_nigk4er22LU_WHanb-BIafFZz4gADyGZfLgJPaetPwJpXFXkMdk2bPaCtXxxxinjFDT8KyudnwZzY4oxNjT1hfuHc6K8FX6MK6Xhfmi0JUyjGDvXBYa1iJ-BL1vO5DaW3LxxSvFZEyKZbs5cQ",
+				"type": "string"
+			}
+		]
+	}
+}
